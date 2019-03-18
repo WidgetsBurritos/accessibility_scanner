@@ -1,0 +1,87 @@
+.achecker-result {
+  min-width: 1px;
+  margin: 5px 5px 30px 5px;
+  word-break: break-word;
+}
+
+.achecker-result-pass .achecker-result-status {
+  color: #00cc00;
+}
+.achecker-result-pass .achecker-result-status::before {
+  content: '✓';
+  font-weight: bold;
+}
+
+.achecker-result-fail .achecker-result-status {
+  color: #cc0000;
+}
+
+.achecker-result-fail .achecker-result-status::before {
+  content: '×';
+}
+
+.achecker-result-status {
+  font-weight: bold;
+}
+
+.achecker-result-status::before {
+  background: #cc0000;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 10px;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 2px;
+  text-align: center;
+  margin-right: 5px;
+  width: 20px;
+}
+
+.achecker-row {
+  border-bottom: 1px solid #c8c8c8;
+  padding: 15px 5px;
+}
+
+.achecker-row:nth-child(2n) {
+  background: #f8f8f8;
+}
+
+.achecker-resultsFull {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.achecker-row-resultType {
+  font-weight: bold;
+}
+
+.achecker-row-resultType::before {
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
+  color: #ffffff;
+  font-size: 16px;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 2px;
+  text-align: center;
+  margin-right: 5px;
+  width: 20px;
+}
+
+.achecker-row-resultType-potential-problem::before {
+  content: '⚠';
+  background: #ffff00;
+  color: #000000;
+}
+
+.achecker-row-resultType-likely-problem::before {
+  content: '⚠';
+  background: #ff0000;
+}
+
+.achecker-row-resultType-error::before {
+  content: '☢';
+  border: none;
+  margin-right: 0;
+}

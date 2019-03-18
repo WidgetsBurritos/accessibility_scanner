@@ -1,0 +1,13 @@
+{
+    "name": "drupal/accessibility_scanner",
+    "description": "Provides website accessibility scanning functionality.",
+    "type": "drupal-module",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://github.com/WidgetsBurritos/accessibility_scanner",
+    "authors": [
+        {
+            "name": "David Stinemetze",
+            "email": "davidstinemetze@gmail.com"
+        }
+    ]
+}

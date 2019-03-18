@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Template file the web page archive before/after screenshot comparison.
+ *
+ * Available variables:
+ * - summary: Object containing summary results.
+ * - results: Object containing detailed results.
+ * - url: URL this report relates to.
+ */
+#}
+
+{{ attach_library('accessibility_scanner/achecker') }}
+
+<div class="achecker-result achecker-result-{{ summary.status|lower }}">
+  <div class="achecker-result-status">{{ summary.status }}</div>
+  <div class="achecker-result-url">{{ url }}</div>
+
+  <ul class="achecker-result-errors">
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.NumOfErrors }}</li>
+    {% endif %}
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.NumOfLikelyProblems }}</li>
+    {% endif %}
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.NumOfPotentialProblems }}</li>
+    {% endif %}
+  </ul>
+  <hr>
+  <ul class="achecker-resultsFull">
+  {% for result in results.result %}
+    {% set class_suffix = result.resultType|lower|replace(' ', '-') %}
+    <li class="achecker-row achecker-row-{{ class_suffix }}">
+      <div class="achecker-row-resultType achecker-row-resultType-{{ class_suffix }}">
+        <span class="achecker-row-resultTypeValue">{{ result.resultType }}</span>
+        <span class="achecker-row-position">({{ 'Line'|trans }} {{ result.lineNum }}, {{ 'Col'|trans}} {{ result.columnNum}})</span>
+      </div>
+      <div class="achecker-row-errorMessage">{{ result.errorMsg|raw }}</div>
+      <div class="achecker-row-errorSourceCode">{{ result.errorSourceCode }}</div>
+    </li>
+  {% endfor %}
+  </ul>
+</div>

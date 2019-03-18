@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Template file the web page archive before/after screenshot comparison.
+ *
+ * Available variables:
+ * - summary: Object containing summary results.
+ * - url: URL this report relates to.
+ */
+#}
+
+{{ attach_library('accessibility_scanner/achecker') }}
+
+<div class="achecker-result achecker-result-{{ summary.status|lower }}">
+  <div class="achecker-result-status">{{ summary.status }}</div>
+  <div class="achecker-result-url">{{ url }}</div>
+
+  <ul class="achecker-result-errors">
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.NumOfErrors }}</li>
+    {% endif %}
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.NumOfLikelyProblems }}</li>
+    {% endif %}
+    {% if summary.NumOfErrors > 0 %}
+    <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.NumOfPotentialProblems }}</li>
+    {% endif %}
+  </ul>
+  {{ view_button }}
+</div>
