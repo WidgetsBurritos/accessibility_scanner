@@ -36,7 +36,7 @@
         <span class="achecker-row-resultTypeValue">{{ result.resultType }}</span>
         <span class="achecker-row-position">({{ 'Line'|trans }} {{ result.lineNum }}, {{ 'Col'|trans}} {{ result.columnNum}})</span>
       </div>
-      <div class="achecker-row-errorMessage">{{ result.errorMsg|raw }}</div>
+      <div class="achecker-row-errorMessage">{{ result.errorMsg|striptags('<a><code>')|raw }}</div>
       <div class="achecker-row-errorSourceCode">{{ result.errorSourceCode }}</div>
     </li>
   {% endfor %}
