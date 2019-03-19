@@ -2,6 +2,8 @@
 
 namespace Drupal\accessibility_scanner\Plugin\CaptureUtility;
 
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\accessibility_scanner\Plugin\CaptureResponse\AcheckerCaptureResponse;
 use Drupal\web_page_archive\Plugin\ConfigurableCaptureUtilityBase;
@@ -28,19 +30,39 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
    * {@inheritdoc}
    */
   public function capture(array $data = []) {
+    $config = \Drupal::configFactory();
+    $capture_utility_settings = $config->get('web_page_archive.wpa_achecker_capture.settings')->get('system');
+
+    if (empty($capture_utility_settings['achecker_endpoint'])) {
+      throw new \Exception('Invalid AChecker endpoint');
+    }
+
+    if (empty($capture_utility_settings['achecker_web_service_id'])) {
+      throw new \Exception('Missing AChecker Web Service ID');
+    }
+
+    $key = \Drupal::service('key.repository')->getKey($capture_utility_settings['achecker_web_service_id']);
+    if (!isset($key)) {
+      throw new \Exception('Invalid key');
+    }
+    $web_service_id = $key->getKeyValue();
+    if (empty($web_service_id)) {
+      throw new \Exception('Empty web service key');
+    }
+
     // Handle missing URLs.
     if (!isset($data['url'])) {
       throw new \Exception('Capture URL is required');
     }
+
     // TODO: Can customize/self-host endpoint?
     // TODO: Pull web service id from key module?
-    // TODO: Pull guide from config.
     $endpoint = 'https://achecker.ca/checkacc.php';
     $params = [
       'uri' => $data['url'],
-      'id' => \Drupal::state()->get('mytempkey'),
+      'id' => $web_service_id,
       'output' => 'rest',
-      'guide' => '508',
+      'guide' => implode(',', array_filter($this->configuration['guidelines'])),
     ];
     $param_str = http_build_query($params);
     $url = "{$endpoint}?{$param_str}";
@@ -113,6 +135,40 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['guidelines'] = $form_state->getValue('guidelines');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildSystemSettingsForm(array &$form, FormStateInterface $form_state) {
+    $config = \Drupal::configFactory()->get('web_page_archive.wpa_achecker_capture.settings');
+
+    $form['achecker_endpoint'] = [
+      '#type' => 'url',
+      '#title' => $this->t('AChecker endpoint'),
+      '#description' => $this->t('The URL to the AChecker endpoint'),
+      '#default_value' => $config->get('system.achecker_endpoint'),
+    ];
+
+    $keys = [];
+    foreach (\Drupal::service('key.repository')->getKeys() as $key) {
+      $keys[$key->id()] = $key->label();
+    }
+    asort($keys);
+
+    $key_link = Link::fromTextAndUrl($this->t('Add a web service ID to Drupal via the Key module'), Url::fromRoute('entity.key.add_form'))->toString();
+    $register_link = Link::fromTextAndUrl($this->t('Register for an AChecker web service ID'), Url::fromUri('https://achecker.ca/register.php'), ['attributes' => ['target' => '_blank']])->toString();
+
+    $form['achecker_web_service_id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Web Service ID'),
+      '#description' => $this->t('Specify which web service ID to use with AChecker:') . "<ul><li>{$key_link}</li><li>{$register_link}</li></ul>",
+      '#options' => $keys,
+      '#default_value' => $config->get('access_token'),
+      '#required' => TRUE,
+    ];
+
+    return $form;
   }
 
   /**

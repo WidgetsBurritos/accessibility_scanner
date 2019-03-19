@@ -1,3 +1,6 @@
+system:
+  achecker_endpoint: 'https://achecker.ca/checkacc.php'
+  achecker_web_service_id: ''
 defaults:
   guidelines:
     508: '508'
