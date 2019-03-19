@@ -33,7 +33,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
    */
   private function renderPreview(array $options) {
     $contents = $this->retrieveFileContents();
-    $summary = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
+    $summary_obj = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
 
     $route_params = [
       'web_page_archive_run_revision' => $options['vid'],
@@ -42,7 +42,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
 
     $render = [
       '#theme' => 'wpa-achecker-preview',
-      '#summary' => $summary,
+      '#summary' => $this->transformSummary($summary_obj),
       '#url' => $this->captureUrl,
       '#view_button' => [
         '#type' => 'link',
@@ -65,13 +65,44 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
   public function retrieveFileContents() {
     if (!empty($this->content) && file_exists($this->content)) {
 
-      $contents= file_get_contents($this->content);
+      $contents = file_get_contents($this->content);
       $contents = str_replace(["\n", "\r", "\t"], '', $contents);
       $contents = trim(str_replace('"', "'", $contents));
       $contents = @simplexml_load_string($contents);
+
       return $contents;
     }
     return '';
+  }
+
+  /**
+   * Transform summary object into a readable array.
+   */
+  private function transformSummary($summary_obj) {
+    return [
+      'num_of_errors' => intval($summary_obj->NumOfErrors ?: 0),
+      'num_of_likely_problems' => intval($summary_obj->NumOfLikelyProblems ?: 0),
+      'num_of_potential_problems' => intval($summary_obj->NumOfPotentialProblems ?: 0),
+      'status' => $summary_obj->status == 'PASS' ? $this->t('PASS') : $this->t('FAIL'),
+    ];
+  }
+
+  /**
+   * Transforms result object into a readable array.
+   */
+  private function transformResults($result_obj) {
+    // $ret = [];
+    foreach ($result_obj->result as $result) {
+      yield [
+        'result_type' => (string) $result->resultType,
+        'line_num' => (int) $result->lineNum,
+        'col_num' => (int) $result->columnNum,
+        'error_msg' => (string) $result->errorMsg,
+        'error_source_code' => (string) $result->errorSourceCode,
+        'repair' => (string) $result->repair,
+      ];
+    }
+    // return $ret;
   }
 
   /**
@@ -79,13 +110,15 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
    */
   private function renderFull(array $options) {
     $contents = $this->retrieveFileContents();
-    $summary = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
-    $results = isset($contents) && isset($contents->results) ? $contents->results : NULL;
+    $summary_obj = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
+    $results_obj = isset($contents) && isset($contents->results) ? $contents->results : NULL;
+    // kint($results_obj);
+    // kint($this->transformResults($results_obj));
 
     $render = [
       '#theme' => 'wpa-achecker-full-report',
-      '#summary' => $summary,
-      '#results' => $results,
+      '#summary' => $this->transformSummary($summary_obj),
+      '#results' => $this->transformResults($results_obj),
       '#url' => $this->captureUrl,
     ];
 

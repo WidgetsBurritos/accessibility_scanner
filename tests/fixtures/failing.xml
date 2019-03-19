@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resultset[
+<!ELEMENT resultset (summary,results)>
+<!ELEMENT summary (status,sessionID,NumOfErrors,NumOfLikelyProblems,NumOfPotentialProblems,guidelines)>
+<!ELEMENT status (#PCDATA)>
+<!ELEMENT sessionID (#PCDATA)>
+<!ELEMENT NumOfErrors (#PCDATA)>
+<!ELEMENT NumOfLikelyProblems (#PCDATA)>
+<!ELEMENT NumOfPotentialProblems (#PCDATA)>
+<!ELEMENT guidelines (guideline)*>
+<!ELEMENT guideline (#PCDATA)>
+<!ELEMENT results (result)*>
+<!ELEMENT result (resultType,lineNum,columnNum,errorMsg,errorSourceCode,repair*,sequenceID*,decisionPass*,decisionFail*,decisionMade*,decisionMadeDate*)>
+<!ELEMENT resultType (#PCDATA)>
+<!ELEMENT lineNum (#PCDATA)>
+<!ELEMENT columnNum (#PCDATA)>
+<!ELEMENT errorMsg (#PCDATA)>
+<!ELEMENT errorSourceCode (#PCDATA)>
+<!ELEMENT repair (#PCDATA)>
+<!ELEMENT sequenceID (#PCDATA)>
+<!ELEMENT decisionPass (#PCDATA)>
+<!ELEMENT decisionFail (#PCDATA)>
+<!ELEMENT decisionMade (#PCDATA)>
+<!ELEMENT decisionMadeDate (#PCDATA)>
+<!ENTITY lt "&#38;#60;">
+<!ENTITY gt "&#62;">
+<!ENTITY amp "&#38;#38;">
+<!ENTITY apos "&#39;">
+<!ENTITY quot "&#34;">
+<!ENTITY ndash "&#8211;">
+]>
+<resultset>
+  <summary>
+    <status>FAIL</status>
+    <sessionID>b520056b7cfc1105afb33a015cc6a4babbc17f3e</sessionID>
+    <NumOfErrors>2</NumOfErrors>
+    <NumOfLikelyProblems>1</NumOfLikelyProblems>
+    <NumOfPotentialProblems>4</NumOfPotentialProblems>
+
+    <guidelines>
+      <guideline>BITV 1.0 (Level 2)</guideline>
+      <guideline>Section 508</guideline>
+      <guideline>Stanca Act</guideline>
+      <guideline>WCAG 1.0 (Level A)</guideline>
+      <guideline>WCAG 1.0 (Level AA)</guideline>
+      <guideline>WCAG 1.0 (Level AAA)</guideline>
+      <guideline>WCAG 2.0 (Level A)</guideline>
+      <guideline>WCAG 2.0 (Level AA)</guideline>
+      <guideline>WCAG 2.0 (Level AAA)</guideline>
+
+    </guidelines>
+  </summary>
+
+  <results>
+    <result>
+      <resultType>Error</resultType>
+      <lineNum>1</lineNum>
+      <columnNum>-66</columnNum>
+      <errorMsg>&lt;a href=&quot;https://achecker.ca/checker/suggestion.php?id=232&quot;
+               onclick=&quot;AChecker.popup('https://achecker.ca/checker/suggestion.php?id=232'); return false;&quot;
+               title=&quot;Suggest improvements on this error message&quot; target=&quot;_new&quot;&gt;Document does not validate.&lt;/a&gt;
+      </errorMsg>
+      <errorSourceCode>&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;&lt;/html&gt;</errorSourceCode>
+        <repair>Validate the document using a validator service.</repair>
+
+    </result>
+    <result>
+      <resultType>Error</resultType>
+      <lineNum>2</lineNum>
+      <columnNum>-55</columnNum>
+      <errorMsg>&lt;a href=&quot;https://achecker.ca/checker/suggestion.php?id=143&quot;
+               onclick=&quot;AChecker.popup('https://achecker.ca/checker/suggestion.php?id=143'); return false;&quot;
+               title=&quot;Suggest improvements on this error message&quot; target=&quot;_new&quot;&gt;Content missing &lt;code&gt;address&lt;/code&gt; of page author.&lt;/a&gt;
+      </errorMsg>
+      <errorSourceCode>&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;&lt;/html&gt;</errorSourceCode>
+        <repair>Add an &lt;code&gt;address&lt;/code&gt; element that describes the author's contact information.</repair>
+
+    </result>
+
+  </results>
+</resultset>

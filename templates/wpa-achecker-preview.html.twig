@@ -16,14 +16,14 @@
   <div class="achecker-result-url">{{ url }}</div>
 
   <ul class="achecker-result-errors">
-    {% if summary.NumOfErrors > 0 %}
-    <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.NumOfErrors }}</li>
+    {% if summary.num_of_errors > 0 %}
+    <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.num_of_errors }}</li>
     {% endif %}
-    {% if summary.NumOfLikelyProblems > 0 %}
-    <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.NumOfLikelyProblems }}</li>
+    {% if summary.num_of_likely_problems > 0 %}
+    <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.num_of_likely_problems }}</li>
     {% endif %}
-    {% if summary.NumOfPotentialProblems > 0 %}
-    <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.NumOfPotentialProblems }}</li>
+    {% if summary.num_of_potential_problems > 0 %}
+    <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.num_of_potential_problems }}</li>
     {% endif %}
   </ul>
   {{ view_button }}
