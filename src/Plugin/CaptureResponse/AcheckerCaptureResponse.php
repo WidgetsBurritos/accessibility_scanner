@@ -5,7 +5,6 @@ namespace Drupal\accessibility_scanner\Plugin\CaptureResponse;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\serialization\Encoder\XmlEncoder;
 use Drupal\web_page_archive\Plugin\CaptureResponseInterface;
 use Drupal\web_page_archive\Plugin\CaptureResponse\UriCaptureResponse;
 
@@ -34,6 +33,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
    */
   private function renderPreview(array $options) {
     $contents = $this->retrieveFileContents();
+    $summary = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
 
     $route_params = [
       'web_page_archive_run_revision' => $options['vid'],
@@ -42,7 +42,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
 
     $render = [
       '#theme' => 'wpa-achecker-preview',
-      '#summary' => $contents->summary,
+      '#summary' => $summary,
       '#url' => $this->captureUrl,
       '#view_button' => [
         '#type' => 'link',
@@ -68,12 +68,8 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
       $contents= file_get_contents($this->content);
       $contents = str_replace(["\n", "\r", "\t"], '', $contents);
       $contents = trim(str_replace('"', "'", $contents));
-      $contents = simplexml_load_string($contents);
+      $contents = @simplexml_load_string($contents);
       return $contents;
-
-      return simplexml_load_file($this->content);
-      return \Drupal::service('serializer')->deserialize(file_get_contents($this->content));
-      return $xml_encoder->decode(file_get_contents($this->content), 'xml');
     }
     return '';
   }
@@ -83,11 +79,13 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
    */
   private function renderFull(array $options) {
     $contents = $this->retrieveFileContents();
+    $summary = isset($contents) && isset($contents->summary) ? $contents->summary : NULL;
+    $results = isset($contents) && isset($contents->results) ? $contents->results : NULL;
 
     $render = [
       '#theme' => 'wpa-achecker-full-report',
-      '#summary' => $contents->summary,
-      '#results' => $contents->results,
+      '#summary' => $summary,
+      '#results' => $results,
       '#url' => $this->captureUrl,
     ];
 

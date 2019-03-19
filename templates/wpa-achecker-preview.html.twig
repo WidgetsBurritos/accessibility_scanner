@@ -19,10 +19,10 @@
     {% if summary.NumOfErrors > 0 %}
     <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.NumOfErrors }}</li>
     {% endif %}
-    {% if summary.NumOfErrors > 0 %}
+    {% if summary.NumOfLikelyProblems > 0 %}
     <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.NumOfLikelyProblems }}</li>
     {% endif %}
-    {% if summary.NumOfErrors > 0 %}
+    {% if summary.NumOfPotentialProblems > 0 %}
     <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.NumOfPotentialProblems }}</li>
     {% endif %}
   </ul>
