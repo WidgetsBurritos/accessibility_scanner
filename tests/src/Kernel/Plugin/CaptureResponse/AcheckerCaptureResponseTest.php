@@ -154,4 +154,29 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
     $this->assertNull($actual['#results']->current());
   }
 
+  /**
+   * Tests full mode on a failing result.
+   */
+  public function testInvalidXml() {
+    $capture = new AcheckerCaptureResponse(__DIR__ . '/../../../../fixtures/invalid.xml', 'https://www.realultimatepower.net');
+    $options = [
+      'mode' => 'full',
+      'vid' => 20,
+      'delta' => 3,
+    ];
+    $expected = [
+      '#theme' => 'wpa-achecker-full-report',
+      '#summary' => [
+        'num_of_errors' => 0,
+        'num_of_likely_problems' => 0,
+        'num_of_potential_problems' => 0,
+        'status' => 'INVALID',
+      ],
+      '#url' => 'https://www.realultimatepower.net',
+    ];
+    $actual = $capture->renderable($options);
+    $this->assertArraySubset($expected, $actual);
+    $this->assertNull($actual['#results']->current());
+  }
+
 }
