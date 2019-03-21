@@ -102,7 +102,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
         yield [
           'result_type' => (string) $result->resultType,
           'line_num' => (int) $result->lineNum,
-          'col_num' => (int) $result->columnNum,
+          'column_num' => (int) $result->columnNum,
           'error_msg' => (string) $result->errorMsg,
           'error_source_code' => (string) $result->errorSourceCode,
           'repair' => (string) $result->repair,

@@ -42,10 +42,6 @@
   padding: 15px 5px;
 }
 
-.achecker-row:nth-child(2n) {
-  background: #f8f8f8;
-}
-
 .achecker-resultsFull {
   list-style-type: none;
   padding: 0;
@@ -84,4 +80,22 @@
   content: '☢';
   border: none;
   margin-right: 0;
+}
+
+.achecker-row-odd {
+  background-color: #f8f8f8;
+}
+
+.achecker-result-summary {
+  float: left;
+  max-width: 50%;
+}
+
+.achecker-result-filter {
+  float: right;
+  max-width: 50%;
+}
+
+.achecker-clear {
+  clear: both;
 }

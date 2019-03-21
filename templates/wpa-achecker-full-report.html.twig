@@ -11,27 +11,47 @@
 #}
 
 {{ attach_library('accessibility_scanner/achecker') }}
+{{ attach_library('accessibility_scanner/detail-filter') }}
 
 <div class="achecker-result achecker-result-{{ summary.status|lower }}">
-  <div class="achecker-result-status">{{ summary.status }}</div>
-  <div class="achecker-result-url">{{ url }}</div>
+  <div class="achecker-result-summary">
+    <div class="achecker-result-status">{{ summary.status }}</div>
+    <div class="achecker-result-url">{{ url }}</div>
 
-  <ul class="achecker-result-errors">
-    {% if summary.num_of_errors > 0 %}
-    <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.num_of_errors }}</li>
-    {% endif %}
-    {% if summary.num_of_likely_problems > 0 %}
-    <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.num_of_likely_problems }}</li>
-    {% endif %}
-    {% if summary.num_of_potential_problems > 0 %}
-    <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.num_of_potential_problems }}</li>
-    {% endif %}
-  </ul>
+    <ul class="achecker-result-errors">
+      {% if summary.num_of_errors > 0 %}
+      <li><strong>{{ 'Errors:'|trans }}</strong> {{ summary.num_of_errors }}</li>
+      {% endif %}
+      {% if summary.num_of_likely_problems > 0 %}
+      <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ summary.num_of_likely_problems }}</li>
+      {% endif %}
+      {% if summary.num_of_potential_problems > 0 %}
+      <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ summary.num_of_potential_problems }}</li>
+      {% endif %}
+    </ul>
+  </div>
+  <div class="achecker-result-filter">
+    <label for="achecker-filter">{{ 'Filter by type:'|trans }}</label>
+    <select id="achecker-filter">
+      <option value="">{{ '--All--'|trans }}</option>
+      {% if summary.num_of_errors > 0 %}
+      <option value="error">{{ 'Errors Only'|trans }}</option>
+      {% endif %}
+      {% if summary.num_of_likely_problems > 0 %}
+      <option value="likely-problem">{{ 'Likely Problems Only'|trans }}</option>
+      {% endif %}
+      {% if summary.num_of_potential_problems > 0 %}
+      <option value="potential-problem">{{ 'Potential Problems Only'|trans }}</option>
+      {% endif %}
+    </select>
+  </div>
+  <div class="achecker-clear"></div>
   <hr>
   <ul class="achecker-resultsFull">
   {% for result in results %}
+    {% set odd_or_even = cycle(['odd', 'even'], loop.index0) %}
     {% set class_suffix = result.result_type|lower|replace(' ', '-') %}
-    <li class="achecker-row achecker-row-{{ class_suffix }}">
+    <li class="achecker-row achecker-row-{{ odd_or_even }} achecker-row-{{ class_suffix }}">
       <div class="achecker-row-resultType achecker-row-resultType-{{ class_suffix }}">
         <span class="achecker-row-resultTypeValue">{{ result.result_type }}</span>
         <span class="achecker-row-position">({{ 'Line'|trans }} {{ result.line_num }}, {{ 'Col'|trans}} {{ result.column_num }})</span>

@@ -3,3 +3,10 @@ achecker:
   css:
     theme:
       css/achecker.css: {}
+detail-filter:
+  version: 1.0.0
+  js:
+    js/detail-filter.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
