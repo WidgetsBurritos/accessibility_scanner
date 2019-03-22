@@ -10,6 +10,7 @@
       $filters.once('accessibilityScannerDetailFilter').each(function () {
         $(this).change(function () {
           var suffix = $(this).val();
+          var $visible;
           if (~~suffix.length) {
             $('.achecker-row').not('.achecker-row-' + suffix).hide();
             $visible = $('.achecker-row-' + suffix);

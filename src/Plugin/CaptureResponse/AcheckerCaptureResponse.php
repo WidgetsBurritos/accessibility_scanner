@@ -79,10 +79,10 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
    */
   private function transformSummary($summary_obj) {
     if (!isset($summary_obj->status)) {
-      $status = $this->t('INVALID');
+      $status = $this->t('Invalid');
     }
     else {
-      $status = $summary_obj->status == 'PASS' ? $this->t('PASS') : $this->t('FAIL');
+      $status = $summary_obj->status == 'PASS' ? $this->t('Pass') : $this->t('Fail');
     }
 
     return [
@@ -90,6 +90,7 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
       'num_of_likely_problems' => isset($summary_obj->NumOfLikelyProblems) ? intval($summary_obj->NumOfLikelyProblems) : 0,
       'num_of_potential_problems' => isset($summary_obj->NumOfPotentialProblems) ? intval($summary_obj->NumOfPotentialProblems) : 0,
       'status' => $status,
+      'guidelines' => isset($summary_obj->guidelines->guideline) ? (array) $summary_obj->guidelines->guideline : [],
     ];
   }
 
@@ -123,7 +124,6 @@ class AcheckerCaptureResponse extends UriCaptureResponse {
       '#theme' => 'wpa-achecker-full-report',
       '#summary' => $this->transformSummary($summary_obj),
       '#results' => $this->transformResults($results_obj),
-      '#url' => $this->captureUrl,
     ];
 
     return $render;

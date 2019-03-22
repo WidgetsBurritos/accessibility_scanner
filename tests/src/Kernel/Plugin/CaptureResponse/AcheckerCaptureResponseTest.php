@@ -38,7 +38,7 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
         'num_of_errors' => 0,
         'num_of_likely_problems' => 0,
         'num_of_potential_problems' => 0,
-        'status' => 'PASS',
+        'status' => 'Pass',
       ],
       '#url' => 'https://www.realultimatepower.net',
       '#view_button' => [
@@ -65,7 +65,7 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
         'num_of_errors' => 2,
         'num_of_likely_problems' => 1,
         'num_of_potential_problems' => 4,
-        'status' => 'FAIL',
+        'status' => 'Fail',
       ],
       '#url' => 'https://www.realultimatepower.net',
       '#view_button' => [
@@ -92,9 +92,11 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
         'num_of_errors' => 0,
         'num_of_likely_problems' => 0,
         'num_of_potential_problems' => 0,
-        'status' => 'PASS',
+        'status' => 'Pass',
+        'guidelines' => [
+          'Section 508',
+        ],
       ],
-      '#url' => 'https://www.realultimatepower.net',
     ];
     $actual = $capture->renderable($options);
     $this->assertArraySubset($expected, $actual);
@@ -119,9 +121,19 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
         'num_of_errors' => 2,
         'num_of_likely_problems' => 1,
         'num_of_potential_problems' => 4,
-        'status' => 'FAIL',
+        'status' => 'Fail',
+        'guidelines' => [
+          'BITV 1.0 (Level 2)',
+          'Section 508',
+          'Stanca Act',
+          'WCAG 1.0 (Level A)',
+          'WCAG 1.0 (Level AA)',
+          'WCAG 1.0 (Level AAA)',
+          'WCAG 2.0 (Level A)',
+          'WCAG 2.0 (Level AA)',
+          'WCAG 2.0 (Level AAA)',
+        ],
       ],
-      '#url' => 'https://www.realultimatepower.net',
     ];
     $actual = $capture->renderable($options);
     $this->assertArraySubset($expected, $actual);
@@ -170,9 +182,9 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
         'num_of_errors' => 0,
         'num_of_likely_problems' => 0,
         'num_of_potential_problems' => 0,
-        'status' => 'INVALID',
+        'status' => 'Invalid',
+        'guidelines' => [],
       ],
-      '#url' => 'https://www.realultimatepower.net',
     ];
     $actual = $capture->renderable($options);
     $this->assertArraySubset($expected, $actual);

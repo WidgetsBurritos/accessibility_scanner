@@ -6,7 +6,6 @@
  * Available variables:
  * - summary: Object containing summary results.
  * - results: Object containing detailed results.
- * - url: URL this report relates to.
  */
 #}
 
@@ -16,7 +15,13 @@
 <div class="achecker-result achecker-result-{{ summary.status|lower }}">
   <div class="achecker-result-summary">
     <div class="achecker-result-status">{{ summary.status }}</div>
-    <div class="achecker-result-url">{{ url }}</div>
+    {% if summary.guidelines is not empty %}
+    <ul class="achecker-result-guidelines">
+      {% for guideline in summary.guidelines %}
+      <li>{{ guideline }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
     <ul class="achecker-result-errors">
       {% if summary.num_of_errors > 0 %}

@@ -6,7 +6,7 @@
 function accessibility_scanner_theme($existing, $type, $theme, $path) {
   return [
     'wpa-achecker-full-report' => [
-      'variables' => ['summary' => NULL, 'url' => NULL, 'results' => NULL],
+      'variables' => ['summary' => NULL, 'results' => NULL],
     ],
     'wpa-achecker-preview' => [
       'variables' => ['summary' => NULL, 'url' => NULL, 'view_button' => NULL],
