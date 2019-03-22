@@ -118,12 +118,13 @@ class AcheckerEndToEndTest extends BrowserTestBase {
 
     // Go view full run.
     $this->clickLink('View Details');
-    $assert->pageTextContains(t('PASS'));
-    $assert->pageTextContains(t('FAIL'));
+    $assert->pageTextContains(t('Pass'));
+    $assert->pageTextContains(t('Fail'));
+    $assert->pageTextContains(t('Section 508'));
+    $assert->pageTextContains(t('WCAG 2.0 (Level AA)'));
     $assert->pageTextContains(t('Errors: 2'));
     $assert->pageTextContains(t('Likely Problems: 1'));
     $assert->pageTextContains(t('Potential Problems: 4'));
-
   }
 
 }

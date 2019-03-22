@@ -166,14 +166,21 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
       '#default_value' => $config->get('system.achecker_endpoint'),
     ];
 
-    $keys = [];
+    $keys = ['' => $this->t('-- None --')];
     foreach (\Drupal::service('key.repository')->getKeys() as $key) {
       $keys[$key->id()] = $key->label();
     }
     asort($keys);
 
-    $key_link = Link::fromTextAndUrl($this->t('Add a web service ID to Drupal via the Key module'), Url::fromRoute('entity.key.add_form'))->toString();
-    $register_link = Link::fromTextAndUrl($this->t('Register for an AChecker web service ID'), Url::fromUri('https://achecker.ca/register.php'), ['attributes' => ['target' => '_blank']])->toString();
+    $link_options = ['destination' => \Drupal::request()->getRequestUri()];
+    $key_link = Link::fromTextAndUrl($this->t('Add a web service ID to Drupal via the Key module'), Url::fromRoute('entity.key.add_form', $link_options))->toString();
+    $link_options = [
+      'attributes' => [
+        'target' => '_blank',
+        'rel' => 'noopener noreferrer',
+      ],
+    ];
+    $register_link = Link::fromTextAndUrl($this->t('Register for an AChecker web service ID'), Url::fromUri('https://achecker.ca/register.php', $link_options))->toString();
 
     $form['achecker_web_service_id'] = [
       '#type' => 'select',

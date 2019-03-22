@@ -3,12 +3,12 @@ system:
   achecker_web_service_id: ''
 defaults:
   guidelines:
-    508: '508'
+    WCAG2-AA: 'WCAG2-AA'
+    508: '0'
     BITV1: '0'
     STANCA: '0'
     WCAG1-A: '0'
     WCAG1-AA: '0'
     WCAG1-AAA: '0'
     WCAG2-A: '0'
-    WCAG2-AA: '0'
     WCAG2-AAA: '0'

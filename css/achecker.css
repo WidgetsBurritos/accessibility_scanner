@@ -8,6 +8,7 @@
   color: #00cc00;
 }
 .achecker-result-pass .achecker-result-status::before {
+  background: #00cc00;
   content: '✓';
   font-weight: bold;
 }
@@ -17,15 +18,16 @@
 }
 
 .achecker-result-fail .achecker-result-status::before {
+  background: #cc0000;
   content: '×';
 }
 
 .achecker-result-status {
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 .achecker-result-status::before {
-  background: #cc0000;
   border-radius: 10px;
   color: #ffffff;
   font-size: 10px;
