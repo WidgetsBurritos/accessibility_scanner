@@ -130,7 +130,7 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
     $expected = [
       'result_type' => 'Error',
       'line_num' => 1,
-      'col_num' => -66,
+      'column_num' => -66,
     ];
     $current = $actual['#results']->current();
     $this->assertArraySubset($expected, $current);
@@ -142,7 +142,7 @@ class AcheckerCaptureResponseTest extends EntityKernelTestBase {
     $expected = [
       'result_type' => 'Error',
       'line_num' => 2,
-      'col_num' => -55,
+      'column_num' => -55,
     ];
     $current = $actual['#results']->current();
     $this->assertArraySubset($expected, $current);

@@ -20,6 +20,11 @@ use Drupal\web_page_archive\Plugin\ConfigurableCaptureUtilityBase;
 class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
 
   /**
+   * Mock endpoint used for testing purposes.
+   */
+  const MOCK_ENDPOINT = 'https://mock.endpoint/checkacc.php';
+
+  /**
    * Most recent response.
    *
    * @var string|null
@@ -55,23 +60,34 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
       throw new \Exception('Capture URL is required');
     }
 
-    // TODO: Can customize/self-host endpoint?
-    // TODO: Pull web service id from key module?
-    $endpoint = 'https://achecker.ca/checkacc.php';
-    $params = [
-      'uri' => $data['url'],
-      'id' => $web_service_id,
-      'output' => 'rest',
-      'guide' => implode(',', array_filter($this->configuration['guidelines'])),
-    ];
-    $param_str = http_build_query($params);
-    $url = "{$endpoint}?{$param_str}";
+    $system = \Drupal::configFactory()->get('web_page_archive.wpa_achecker_capture.settings');
 
-    // Determine file locations.
-    $filename = $this->getFileName($data, 'xml');
-
+    // If our endpoint is a mock endpoint, let's simulate behavior.
+    // This allows for testing without actual HTTP requests being made.
+    if ($capture_utility_settings['achecker_endpoint'] == static::MOCK_ENDPOINT) {
+      $dir = realpath(__DIR__ . '/../../../tests/fixtures');
+      if (stristr($data['url'], 'pass')) {
+        $filename = "{$dir}/passing.xml";
+      }
+      else {
+        $filename = "{$dir}/failing.xml";
+      }
+    }
     // Save xml and set our response.
-    \Drupal::httpClient()->request('GET', $url, ['sink' => $filename]);
+    else {
+      $params = [
+        'uri' => $data['url'],
+        'id' => $web_service_id,
+        'output' => 'rest',
+        'guide' => implode(',', array_filter($this->configuration['guidelines'])),
+      ];
+      $param_str = http_build_query($params);
+      $url = "{$capture_utility_settings['achecker_endpoint']}?{$param_str}";
+
+      // Determine file locations.
+      $filename = $this->getFileName($data, 'xml');
+      \Drupal::httpClient()->request('GET', $url, ['sink' => $filename]);
+    }
     $this->response = new AcheckerCaptureResponse($filename, $data['url']);
 
     return $this;

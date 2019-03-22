@@ -3,8 +3,8 @@ web_page_archive.capture_utility.wpa_achecker_capture:
   label: 'Achecker capture utility'
   mapping:
     guidelines:
-      type: mapping
-      mapping:
+      type: sequence
+      sequence:
         type: string
         label: 'Guideline'
 
@@ -12,11 +12,20 @@ web_page_archive.wpa_achecker_capture.settings:
   type: config_object
   label: 'Achecker Capture Utility settings'
   mapping:
+    system:
+      type: mapping
+      mapping:
+        achecker_endpoint:
+          type: string
+          label: 'AChecker Endpoint'
+        achecker_web_service_id:
+          type: string
+          label: 'AChecker Web Service ID'
     defaults:
       type: mapping
       mapping:
         guidelines:
-          type: mapping
-          mapping:
+          type: sequence
+          sequence:
             type: string
             label: 'Guideline'
