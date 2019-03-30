@@ -8,8 +8,44 @@ function accessibility_scanner_theme($existing, $type, $theme, $path) {
     'wpa-achecker-full-report' => [
       'variables' => ['summary' => NULL, 'results' => NULL],
     ],
+    'wpa-achecker-history' => [
+      'variables' => ['results' => NULL],
+    ],
     'wpa-achecker-preview' => [
       'variables' => ['summary' => NULL, 'url' => NULL, 'view_button' => NULL],
     ],
+    'wpa-achecker-summary' => [
+      'variables' => ['result' => NULL, 'trend_button' => NULL],
+    ],
   ];
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function accessibility_scanner_views_pre_view($view, $display_id, array &$args) {
+  if ($view->id() == 'web_page_archive_individual' && $display_id == 'individual_run_page' && isset($args[0]) && is_numeric($args[0])) {
+    $item = [
+      'id' => 'achecker_result',
+      'table' => 'views',
+      'field' => 'achecker_result',
+      'plugin_id' => 'achecker_result',
+    ];
+
+    $view->setHandler($display_id, 'header', 'achecker_result', $item);
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function accessibility_scanner_views_data() {
+  $data['views']['achecker_result'] = [
+    'title' => t('AChecker Summary Results'),
+    'help' => t('Shows achecker result summary'),
+    'area' => [
+      'id' => 'achecker_result',
+    ],
+  ];
+  return $data;
 }

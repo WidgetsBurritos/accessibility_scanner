@@ -1,0 +1,11 @@
+entity.web_page_archive.achecker_history:
+  path: 'admin/config/system/web-page-archive/jobs/{web_page_archive}/achecker-history'
+  defaults:
+    _controller: '\Drupal\accessibility_scanner\Controller\AcheckerHistoryController::historyContent'
+    _title_callback: '\Drupal\accessibility_scanner\Controller\AcheckerHistoryController::historyTitle'
+  options:
+    parameters:
+      web_page_archive:
+        type: entity:web_page_archive
+  requirements:
+    _permission: 'view web page archive results'

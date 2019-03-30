@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * Template file the web page archive before/after screenshot comparison.
+ *
+ * Available variables:
+ * - attributes: Object containing attributes.
+ * - summary: Object containing summary results.
+ * - results: Object containing detailed results.
+ */
+#}
+
+<div{{ attributes.addClass('achecker-runSummary') }}>
+
+  <div class="achecker-runSummary">
+    <h4>{{ 'Cumulative Results:'|trans }}</h4>
+    <div class="achecker-runSummaryColumn">
+      <ul class="achecker-runSummaryList">
+        <li><strong>{{ 'Total:'|trans }}</strong> {{ result.total }}</li>
+        <li><strong>{{ 'Pass:'|trans }}</strong> {{ result.pass }}</li>
+        <li><strong>{{ 'Fail:'|trans }}</strong> {{ result.fail }}</li>
+      </ul>
+    </div>
+    <div class="achecker-runSummaryColumn">
+      <ul class="achecker-runSummaryList">
+        <li><strong>{{ 'Errors:'|trans }}</strong> {{ result.num_of_errors }}</li>
+        <li><strong>{{ 'Likely Problems:'|trans }}</strong> {{ result.num_of_likely_problems }}</li>
+        <li><strong>{{ 'Potential Problems:'|trans }}</strong> {{ result.num_of_potential_problems }}</li>
+      </ul>
+    </div>
+    <div class="achecker-runSummaryColumn">
+      <strong>{{ 'Guidelines:'|trans }}</strong>
+      <ul class="achecker-runSummaryList">
+        {% for guideline in result.guidelines %}
+          <li>{{ guideline }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="achecker-runSummaryColumn">
+      {{ trend_button }}
+    </div>
+    <div class="achecker-clear"></div>
+  </div>
+
+</div>

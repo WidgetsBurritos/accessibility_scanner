@@ -10,3 +10,14 @@ detail-filter:
   dependencies:
     - core/jquery
     - core/jquery.once
+google-charts:
+  remote: https://www.gstatic.com/charts/loader.js
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    gpl-compatible: false
+  dependencies:
+    - core/jquery
+  js:
+    https://www.gstatic.com/charts/loader.js: { type: external, minified: true }
+    js/gchart.js: {}

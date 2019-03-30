@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * @file
+ * Install commands for accessibility_scanner.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_schema().
+ */
+function accessibility_scanner_schema() {
+  $schema['wpa_achecker_summary'] = [
+    'description' => 'Summary of capture jobs.',
+    'fields' => [
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Maps to {web_page_archive_run_revision}.id.',
+      ],
+      'vid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Maps to {web_page_archive_run_revision}.vid.',
+      ],
+      'total' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total URLs captured.',
+      ],
+      'pass' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total passing URLs captured.',
+      ],
+      'fail' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total failing URLs captured.',
+      ],
+      'num_of_errors' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of errors detected.',
+      ],
+      'num_of_likely_problems' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of likely problems detected.',
+      ],
+      'num_of_potential_problems' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of potential problems detected.',
+      ],
+      'guidelines' => [
+        'type' => 'varchar_ascii',
+        'length' => 1023,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Serializes list of applied guidelines',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the capture was completed.',
+      ],
+    ],
+    'primary key' => ['vid'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Issue #3041509: Creates job summary table.
+ */
+function accessibility_scanner_update_8001() {
+  $spec = [
+    'description' => 'Summary of capture jobs.',
+    'fields' => [
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Maps to {web_page_archive_run_revision}.id.',
+      ],
+      'vid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Maps to {web_page_archive_run_revision}.vid.',
+      ],
+      'total' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total URLs captured.',
+      ],
+      'pass' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total passing URLs captured.',
+      ],
+      'fail' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total failing URLs captured.',
+      ],
+      'num_of_errors' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of errors detected.',
+      ],
+      'num_of_likely_problems' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of likely problems detected.',
+      ],
+      'num_of_potential_problems' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of potential problems detected.',
+      ],
+      'guidelines' => [
+        'type' => 'varchar_ascii',
+        'length' => 1023,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Serializes list of applied guidelines',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the capture was completed.',
+      ],
+    ],
+    'primary key' => ['vid'],
+  ];
+
+  $schema = Database::getConnection()->schema();
+  $schema->createTable('wpa_achecker_summary', $spec);
+}

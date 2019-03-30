@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * Template file for achecker history.
+ *
+ * Available variables:
+ * - attributes: Object containing attributes.
+ */
+#}
+
+{{ attach_library('accessibility_scanner/achecker') }}
+{{ attach_library('accessibility_scanner/google-charts') }}
+
+<div{{ attributes }}>
+  <div class="achecker-passFailDetails">
+    <div class="achecker-summaryDetails">
+      {% trans %}
+      <h2>Pass/Fail Trends</h2>
+      <p>This chart shows pass/fail trends over time.</p>
+      <ul>
+        <li><strong>Total:</strong> Total number of URLs scanned.</li>
+        <li><strong>Passing:</strong> URLs that pass web accessibility scan.</li>
+        <li><strong>Failing:</strong> URLs that fail web accessibility scan.</li>
+      </ul>
+      {% endtrans %}
+    </div>
+    <div class="achecker-summaryChart" id="achecker_pass_fail_chart"></div>
+    <div class="achecker-clear"></div>
+  </div>
+  <div class="achecker-problemDetails">
+    <div class="achecker-summaryDetails">
+      {% trans %}
+      <h2>Problem Trends</h2>
+      <p>This chart shows cumulative number of errors and problems over time.</p>
+      <ul>
+        <li><strong>Errors:</strong> Cumulative total number of accessibility errors.</li>
+        <li><strong>Likely Problems:</strong> Cumulative total number of likely accessibility issues.</li>
+        <li><strong>Potential Problems:</strong> Cumulative total number of potential accessibility issues.</li>
+      </ul>
+      {% endtrans %}
+    </div>
+    <div class="achecker-summaryChart" id="achecker_problem_chart"></div>
+    <div class="achecker-clear"></div>
+  </div>
+</div>

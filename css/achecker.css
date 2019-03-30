@@ -101,3 +101,29 @@
 .achecker-clear {
   clear: both;
 }
+
+.achecker-runSummary {
+  background-color: #f8f8f8;
+  margin: 5px 0;
+  padding: 1px 5px 5px;
+}
+
+.achecker-runSummaryColumn {
+  float: left;
+  max-width: 33%;
+  padding: 0 15px;
+}
+
+.achecker-runSummaryList {
+  margin: 0;
+  padding: 0 20px;
+}
+
+.achecker-summaryDetails {
+  float: left;
+  width: 25%;
+}
+.achecker-summaryChart {
+  float: right;
+  width: 72%;
+}

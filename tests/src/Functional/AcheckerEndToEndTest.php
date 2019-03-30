@@ -118,13 +118,33 @@ class AcheckerEndToEndTest extends BrowserTestBase {
 
     // Go view full run.
     $this->clickLink('View Details');
-    $assert->pageTextContains(t('Pass'));
-    $assert->pageTextContains(t('Fail'));
+
+    // Look for summary information.
+    $assert->pageTextContains(t('Achecker Job'));
+    $assert->pageTextContains(t('Total: 4'));
+    $assert->pageTextContains(t('Pass: 2'));
+    $assert->pageTextContains(t('Fail: 2'));
+    $assert->pageTextContains(t('Errors: 4'));
+    $assert->pageTextContains(t('Likely Problems: 2'));
+    $assert->pageTextContains(t('Potential Problems: 8'));
+    $assert->pageTextContains(t('BITV 1.0 (Level 2)'));
     $assert->pageTextContains(t('Section 508'));
-    $assert->pageTextContains(t('WCAG 2.0 (Level AA)'));
+    $assert->pageTextContains(t('View Historical Trends'));
+
+    // Look for individual results.
+    $assert->pageTextContains(t('Fail'));
     $assert->pageTextContains(t('Errors: 2'));
     $assert->pageTextContains(t('Likely Problems: 1'));
     $assert->pageTextContains(t('Potential Problems: 4'));
+
+    // Go to chart page.
+    $this->clickLink('View Historical Trends');
+
+    // Look for drupal settings data.
+    $assert->responseContains('"acheckerResults":{"1":{"entity_id":"1","vid":"1","total":"4","pass":"2","fail":"2","num_of_errors":"4","num_of_likely_problems":"2","num_of_potential_problems":"8","guidelines":"a:2:{s:18:\u0022BITV 1.0 (Level 2)\u0022;s:18:\u0022BITV 1.0 (Level 2)\u0022;s:11:\u0022Section 508\u0022;s:11:\u0022Section 508\u0022;}"');
+    $assert->responseContains('<div class="achecker-summaryChart" id="achecker_problem_chart"></div>');
+    $assert->responseContains('<div class="achecker-summaryChart" id="achecker_pass_fail_chart"></div>');
+
   }
 
 }

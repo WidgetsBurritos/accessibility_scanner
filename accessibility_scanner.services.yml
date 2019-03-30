@@ -1,0 +1,11 @@
+services:
+  accessibility_scanner.event_subscriber:
+    arguments: ['@accessibility_scanner.achecker_summary_storage']
+    class: Drupal\accessibility_scanner\EventSubscriber\WebPageArchiveEventSubscriber
+    tags:
+      - { name: event_subscriber }
+  accessibility_scanner.achecker_summary_storage:
+    arguments: ['@database', '@datetime.time']
+    class: Drupal\accessibility_scanner\Sql\AcheckerSummaryStorage
+    tags:
+      - { name: storage }
