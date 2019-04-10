@@ -1,7 +1,7 @@
 .achecker-result {
   min-width: 1px;
   margin: 5px 5px 30px 5px;
-  word-break: break-word;
+  word-break: break-all;
 }
 
 .achecker-result-pass .achecker-result-status {
@@ -28,6 +28,7 @@
 }
 
 .achecker-result-status::before {
+  box-sizing: border-box;
   border-radius: 10px;
   color: #ffffff;
   font-size: 10px;
@@ -55,6 +56,7 @@
 }
 
 .achecker-row-resultType::before {
+  box-sizing: border-box;
   border-radius: 10px;
   border: 1px solid #e8e8e8;
   color: #ffffff;

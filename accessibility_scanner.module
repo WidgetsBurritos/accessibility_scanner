@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Contains accessibility_scanner.module.
+ */
+
+/**
  * Implements hook_theme().
  */
 function accessibility_scanner_theme($existing, $type, $theme, $path) {

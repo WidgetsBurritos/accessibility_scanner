@@ -1,0 +1,44 @@
+diff --git a/accessibility_scanner.module b/accessibility_scanner.module
+index 3139018..5a66c27 100644
+--- a/accessibility_scanner.module
++++ b/accessibility_scanner.module
+@@ -1,5 +1,10 @@
+ <?php
+ 
++/**
++ * @file
++ * Contains accessibility_scanner.module.
++ */
++
+ /**
+  * Implements hook_theme().
+  */
+diff --git a/css/achecker.css b/css/achecker.css
+index cf3f739..98b05cf 100644
+--- a/css/achecker.css
++++ b/css/achecker.css
+@@ -1,7 +1,7 @@
+ .achecker-result {
+   min-width: 1px;
+   margin: 5px 5px 30px 5px;
+-  word-break: break-word;
++  word-break: break-all;
+ }
+ 
+ .achecker-result-pass .achecker-result-status {
+@@ -28,6 +28,7 @@
+ }
+ 
+ .achecker-result-status::before {
++  box-sizing: border-box;
+   border-radius: 10px;
+   color: #ffffff;
+   font-size: 10px;
+@@ -55,6 +56,7 @@
+ }
+ 
+ .achecker-row-resultType::before {
++  box-sizing: border-box;
+   border-radius: 10px;
+   border: 1px solid #e8e8e8;
+   color: #ffffff;
