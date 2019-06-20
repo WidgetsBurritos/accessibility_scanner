@@ -65,22 +65,24 @@ class AcheckerResult extends AreaPluginBase {
   public function render($empty = FALSE) {
     if (isset($this->view->argument['vid_1'])) {
       $run_id = intval($this->view->argument['vid_1']->getValue());
-      if ($result = $this->storage->getResult($run_id)) {
+      if (($result = $this->storage->getResult($run_id)) && !empty($result['entity_id'])) {
         $run_entity = $this->entityTypeManager->getStorage('web_page_archive_run')->load($result['entity_id']);
-        $job_id = $run_entity->getConfigEntity()->id();
-        $route_params = ['web_page_archive' => $job_id];
-        return [
-          '#theme' => 'wpa-achecker-summary',
-          '#result' => $result,
-          '#trend_button' => [
-            '#type' => 'link',
-            '#url' => Url::fromRoute('entity.web_page_archive.achecker_history', $route_params),
-            '#title' => $this->t('View Historical Trends'),
-            '#attributes' => [
-              'class' => ['button'],
+        if (isset($run_entity)) {
+          $job_id = $run_entity->getConfigEntity()->id();
+          $route_params = ['web_page_archive' => $job_id];
+          return [
+            '#theme' => 'wpa-achecker-summary',
+            '#result' => $result,
+            '#trend_button' => [
+              '#type' => 'link',
+              '#url' => Url::fromRoute('entity.web_page_archive.achecker_history', $route_params),
+              '#title' => $this->t('View Historical Trends'),
+              '#attributes' => [
+                'class' => ['button'],
+              ],
             ],
-          ],
-        ];
+          ];
+        }
       }
     }
     return [];
