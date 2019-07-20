@@ -2,11 +2,18 @@
 
 namespace Drupal\accessibility_scanner\Plugin\CaptureUtility;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\accessibility_scanner\Plugin\CaptureResponse\AcheckerCaptureResponse;
+use Drupal\key\KeyRepositoryInterface;
 use Drupal\web_page_archive\Plugin\ConfigurableCaptureUtilityBase;
+use GuzzleHttp\ClientInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Achecker accessibility scanner capture utility.
@@ -18,6 +25,83 @@ use Drupal\web_page_archive\Plugin\ConfigurableCaptureUtilityBase;
  * )
  */
 class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
+
+  use DependencySerializationTrait;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The key repository.
+   *
+   * @var \Drupal\key\KeyRepositoryInterface
+   */
+  protected $keyRepository;
+
+  /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * The HTTP client to fetch the files with.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * Constructs a new AcheckerCaptureUtility.
+   *
+   * @param array $configuration
+   *   The plugin configuration, i.e. an array with configuration values keyed
+   *   by configuration option name. The special key 'context' may be used to
+   *   initialize the defined contexts by setting it to an array of context
+   *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param string $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
+   * @param \Drupal\key\KeyRepositoryInterface $key_repository
+   *   The key repository.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param \GuzzleHttp\ClientInterface $http_client
+   *   A Guzzle client object.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, ConfigFactoryInterface $config_factory, KeyRepositoryInterface $key_repository, Request $request, ClientInterface $http_client) {
+    $this->configFactory = $config_factory;
+    $this->keyRepository = $key_repository;
+    $this->request = $request;
+    $this->httpClient = $http_client;
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('logger.factory')->get('accessibility_scanner'),
+      $container->get('config.factory'),
+      $container->get('key.repository'),
+      $container->get('request_stack')->getCurrentRequest(),
+      $container->get('http_client')
+    );
+  }
 
   /**
    * Mock endpoint used for testing purposes.
@@ -35,8 +119,7 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
    * {@inheritdoc}
    */
   public function capture(array $data = []) {
-    $config = \Drupal::configFactory();
-    $capture_utility_settings = $config->get('web_page_archive.wpa_achecker_capture.settings')->get('system');
+    $capture_utility_settings = $this->configFactory->get('web_page_archive.wpa_achecker_capture.settings')->get('system');
 
     if (empty($capture_utility_settings['achecker_endpoint'])) {
       throw new \Exception('Invalid AChecker endpoint');
@@ -46,7 +129,7 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
       throw new \Exception('Missing AChecker Web Service ID');
     }
 
-    $key = \Drupal::service('key.repository')->getKey($capture_utility_settings['achecker_web_service_id']);
+    $key = $this->keyRepository->getKey($capture_utility_settings['achecker_web_service_id']);
     if (!isset($key)) {
       throw new \Exception('Invalid key');
     }
@@ -59,8 +142,6 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
     if (!isset($data['url'])) {
       throw new \Exception('Capture URL is required');
     }
-
-    $system = \Drupal::configFactory()->get('web_page_archive.wpa_achecker_capture.settings');
 
     // If our endpoint is a mock endpoint, let's simulate behavior.
     // This allows for testing without actual HTTP requests being made.
@@ -86,7 +167,7 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
 
       // Determine file locations.
       $filename = $this->getFileName($data, 'xml');
-      \Drupal::httpClient()->request('GET', $url, ['sink' => $filename]);
+      $this->httpClient->request('GET', $url, ['sink' => $filename]);
     }
     $this->response = new AcheckerCaptureResponse($filename, $data['url']);
 
@@ -123,9 +204,8 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    $config = \Drupal::configFactory()->get('web_page_archive.wpa_achecker_capture.settings');
     return [
-      'guidelines' => $config->get('defaults.guidelines'),
+      'guidelines' => $this->configFactory->get('web_page_archive.wpa_achecker_capture.settings')->get('defaults.guidelines'),
     ];
   }
 
@@ -157,22 +237,20 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
    * {@inheritdoc}
    */
   public function buildSystemSettingsForm(array &$form, FormStateInterface $form_state) {
-    $config = \Drupal::configFactory()->get('web_page_archive.wpa_achecker_capture.settings');
-
     $form['achecker_endpoint'] = [
       '#type' => 'url',
       '#title' => $this->t('AChecker endpoint'),
       '#description' => $this->t('The URL to the AChecker endpoint'),
-      '#default_value' => $config->get('system.achecker_endpoint'),
+      '#default_value' => $this->configFactory->get('web_page_archive.wpa_achecker_capture.settings')->get('system.achecker_endpoint'),
     ];
 
     $keys = ['' => $this->t('-- None --')];
-    foreach (\Drupal::service('key.repository')->getKeys() as $key) {
+    foreach ($this->keyRepository->getKeys() as $key) {
       $keys[$key->id()] = $key->label();
     }
     asort($keys);
 
-    $link_options = ['destination' => \Drupal::request()->getRequestUri()];
+    $link_options = ['destination' => $this->request->getRequestUri()];
     $key_link = Link::fromTextAndUrl($this->t('Add a web service ID to Drupal via the Key module'), Url::fromRoute('entity.key.add_form', $link_options))->toString();
     $link_options = [
       'attributes' => [
@@ -187,7 +265,7 @@ class AcheckerCaptureUtility extends ConfigurableCaptureUtilityBase {
       '#title' => $this->t('Web Service ID'),
       '#description' => $this->t('Specify which web service ID to use with AChecker:') . "<ul><li>{$key_link}</li><li>{$register_link}</li></ul>",
       '#options' => $keys,
-      '#default_value' => $config->get('access_token'),
+      '#default_value' => $this->configFactory->get('web_page_archive.wpa_achecker_capture.settings')->get('access_token'),
       '#required' => TRUE,
     ];
 
